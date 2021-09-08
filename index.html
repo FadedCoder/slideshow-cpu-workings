@@ -1,0 +1,278 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>CPUs</title>
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<!-- Slide 1 -->
+				<h1>How a CPU works</h1>
+
+				<p>Read: Stuff I found interesting about CPUs</p>
+
+				<p style="margin-top: 3rem;"><small>Made by: <a href="https://sohamsen.me" target="_blank">Soham
+							Sen</a></small></p>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 2 -->
+				<textarea data-template>
+					## What even is the purpose of a CPU?
+
+					At the grassroots level, a CPU just does the following:
+
+					1. Read some instructions from the memory on what to do
+					2. If required, load data from memory
+					3. Perform some computations on the data
+					4. Store the data back into the memory
+					5. Go back to step 1
+				</textarea>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 3 -->
+				<textarea data-template>
+					## More formally...
+
+					It is known as the machine cycle, consisting of three steps:
+
+					1. **Fetch** instructions
+					2. **Decode** the instruction and understand what to do
+					3. **Execute** the instruction
+
+					<img data-src="img/machine-cycle.png" style="vertical-align: middle;margin-left:5em;" />
+				</textarea>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 4 -->
+				<textarea data-template>
+					## But wait, what is a register?
+
+					You might be aware of RAM, which is used to temporarily store data that is used by a CPU.
+					It is much faster to read or write data onto RAM than a hard disk, at the cost of reduced size.
+
+					Similarly, a register can be considered as a temporary storage space that is accessed directly by the CPU.
+					While it might take the CPU around 62 ns to access the RAM, it can access registers in less than 1 ns!
+					This comes at a greater cost, with registers typically being less than 64 bits.
+
+					<div style="text-align:center;">
+						<img data-src="img/latency-vs-size.png" style="height: 500px;" />
+					</div>
+				</textarea>
+			</section>
+
+			<section>
+				<!-- Slide 5 -->
+				<section data-markdown style="text-align: left;">
+					<textarea data-template>
+					## Some common registers
+
+					* **Instruction register** storing the instruction currently being executed.
+					* **Data registers** holding numerical data, and sometimes even floats, characters or other values.
+					* **Address registers** holding addresses, typically RAM memory addresses.
+					* **Stack register** which points to the top of the _stack_, that is, the location at the top of the stack.
+					* ...and many more architecture-specific ones, check the [Wikipedia article](https://en.wikipedia.org/wiki/Processor_register#Types) for more!
+				</textarea>
+				</section>
+				<section style="text-align: center;">
+					<img data-src="img/x86-regs.png" style="height:800px;background:white;" />
+				</section>
+			</section>
+
+			<!-- <section>
+				!-- Slide 6 ->
+				<section data-markdown style="text-align: left;">
+					<textarea data-template>
+						## The Stack
+
+						You can think of the stack as a LIFO queue that stores data and instructions that is to be used by the CPU.
+						Think of the stack register as a pointer in C to an array.
+
+						The stack is stored on the RAM, and is accessed by the CPU through two instructions:
+						1. `push` which pushes some data onto the stack and then increments the stack register by 1.
+						2. `pop` which pops (removes and returns) the data pointed by the stack register, and decrements the register by 1.
+						
+						Since the stack is in the RAM, it is slower to access than the registers.
+					</textarea>
+				</section>
+				<section style="text-align: center;">
+					<img data-src="img/stack.png" style="height:800px;background:white;" />
+				</section>
+			</section> -->
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 7 -->
+				<textarea data-template>
+					## The instructions
+
+					The instructions that a CPU supports varies between each architecture.
+
+					These instructions are written in Assembly language (or directly hex if you're daring enough) and processed by the CPU directly.
+				</textarea>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 8 -->
+				<textarea data-template>
+					## Some common instructions
+
+					Let's learn some basic instructions for x86!
+					
+					1. <u>`mov a b`</u> Move the contents of b into a
+					2. <u>`push a`</u> Push the contents of a into the top of the stack.
+					2. <u>`pop a`</u> Pop the top element of the stack into a.
+					3. <u>`add a b`</u> Add a and b, and then store the result in a. (a = a + b)
+
+					The full list of instructions for the x86 instruction set is [available here](https://www.cs.virginia.edu/~evans/cs216/guides/x86.html).
+				</textarea>
+			</section>
+
+			<!-- <section data-markdown style="text-align: left;">
+				!-- Slide 9 --
+				<textarea data-template>
+					## Walk through Assembly code
+
+					Let's walk through some Assembly code for adding two numbers stored in the stack!
+
+					<pre>
+						<code data-trim data-noescape class="language-x86asm">
+							pop     eax		; Pop the top element of array into the register eax
+							pop     ebx		; Pop the next element of array into the register ebx
+							add     eax ebx	; eax = eax + ebx
+							push    eax		; Store the result into the stack
+						</code>
+					</pre>
+				</textarea>
+			</section> -->
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 10 -->
+				<textarea data-template>
+					## Modern CPU Magic: Branch prediction
+
+					There is a very famous [Stackoverflow question](https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array) on why processing a sorted array is faster.
+					Much faster in fact, almost 6 times faster than an unsorted array.
+
+					To understand why this happens, we need to learn about pipelining in CPUs first.
+				</textarea>
+			</section>
+
+			<section>
+				<!-- Slide 11 -->
+				<section data-markdown style="text-align: left;">
+					<textarea data-template>
+						## Pipelines
+
+						With pipelines we can increase the throughput of instructions (even though the latency stays same).
+
+						For example, while one instruction is being executed, the next one can be decoded and the one after that can be fetched in parallel,
+						since all three are being run by different circuits.
+					</textarea>
+				</section>
+				<section style="text-align: center;">
+					<img data-src="img/pipelines.png" style="height:800px;background:white;" />
+				</section>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 12 -->
+				<textarea data-template>
+					## But what happens with conditional statements?
+
+					When we face conditional statements (like if-else), we are faced with a problem when using pipelines:
+					
+					**We don't know whether there will be a jump to some other instruction, or it will continue to the next instruction!**
+
+					One naive way to solve this problem will be to process one instruction at a time, but this will make a CPU slower because we won't be executing pipelines in parallel anymore.
+				</textarea>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 13 -->
+				<textarea data-template>
+					## Where branch prediction steps in
+
+					Branch prediction is used to predict if a conditional jump will be executed or not (will it continue to the next instruction, or will it jump to the next one?)
+
+					Say we are predicting in advance that the conditional jump will _not_ be executed, so in the other pipelines, we continue to process the instructions _after_ the conditional jump.
+					If it turns out that the conditional jump was false indeed (that is, no jump), we will already have been processing the next instructions and will not have to wait till the jump was executed.
+				</textarea>
+			</section>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 14 -->
+					<textarea data-template>
+					## The cost of misprediction
+
+					If we mispredict, we will have to throw away the next instructions that were processed, and start again from the start.
+
+					This is what results in the slow executing in the Stackoverflow question. Since the data is random, we are mispredicting a lot of branches,
+					which essentially makes the CPU run sequentially.
+
+					A modern CPU has a lot of pipelines, so throwing away the processed instructions is equivalent to wasting 10-20 CPU cycles.
+				</textarea>
+			</section>
+
+			<section data-markdown style="text-align: left;">
+				<!-- Slide 15 -->
+					<textarea data-template>
+					## Types of branch prediction
+
+					Some common ones are:
+
+					1. <u>**Static**</u>: Assume all conditional jumps are always false (or true).
+					2. <u>**Dynamic**</u>: Depends on the last jump. Such as, if the last two jumps were false, the next one will be false too.
+					3. <u>**Neural**</u>: Use machine learning and magic to predict branches, used by many modern CPUs.
+				</textarea>
+			</section>
+
+			<section data-markdown>
+				<!-- Slide 15 -->
+					<textarea data-template>
+					# ありがとう！
+
+					TL note\: Thanks!
+
+					contact@sohamsen.me
+					
+					sohamsendev@oksbi
+				</textarea>
+			</section>
+		</div>
+	</div>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/search/search.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		Reveal.initialize({
+			width: 1800,
+			height: 1000,
+			margin: 0.04,
+			minScale: 0.2,
+			maxScale: 2.0,
+			hash: true,
+			plugins: [RevealMarkdown, RevealHighlight, RevealSearch]
+		});
+	</script>
+</body>
+
+</html>
